@@ -13,6 +13,8 @@ export class MongooseProvider implements IProvider {
         serverSelectionTimeoutMS: 5000,
         socketTimeoutMS: 45000,
         family: 4,
+        dbName: environment.mongoDb,
+        authSource: 'admin'
       });
     } catch (error: any) {
       logger.error(error);

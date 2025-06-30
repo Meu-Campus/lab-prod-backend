@@ -47,7 +47,6 @@ class Main {
       await provider.execute();
     }));
 
-
     server.use(express.json());
     server.use(cors());
 

@@ -3,4 +3,5 @@
 export const environment = {
   port: parseInt(process.env.PORT ?? "4000"),
   host: process.env.HOST ?? 'localhost',
+  mongoUri: process.env.MONGO_URI ?? '',
 }

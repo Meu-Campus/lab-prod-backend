@@ -1,4 +1,4 @@
-﻿import { Controller, Get } from "../../server/routing";
+﻿import { Controller, Get, Response, Request } from "@src/server/routing";
 
 export class UserModuleController extends Controller {
   @Get("/user")

@@ -4,19 +4,20 @@ import { environment } from "./environment";
 import cors from "cors";
 import { providers } from "./providers/providers";
 import { controllers } from "./controllers";
+import { RouteConfig } from "@src/server/routing";
 
 class Main {
   private buildRoutes(router: Router): Router {
     controllers.forEach(controller => {
-      const ctor = controller.constructor;
+      const ctor = controller.constructor as any;
       if (!ctor.routeConfigs) return;
 
-      const { routeConfigs } = ctor;
+      const { routeConfigs } = ctor as any;
 
       routeConfigs.forEach((routeConfig: RouteConfig) => {
         const { handle, method, middlewares, path } = routeConfig;
 
-        const jobs = middlewares.length ? [...middlewares, handle] : [handle];
+        const jobs = middlewares && middlewares.length ? [...middlewares, handle] : [handle];
 
         switch (method) {
           case 'get':
@@ -57,13 +58,6 @@ class Main {
       logger.info(`Server is running on http://${environment.host}:${environment.port}`);
     });
   }
-}
-
-export type RouteConfig = {
-  method: 'get' | 'post' | 'put' | 'delete';
-  path: string;
-  middlewares: Function[];
-  handler: Function;
 }
 
 const main = new Main();

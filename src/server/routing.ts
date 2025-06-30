@@ -1,8 +1,14 @@
-﻿export type RouteConfig = {
+﻿import * as e from 'express';
+
+export type Request = e.Request;
+export type Response = e.Response;
+export type NextFunction = e.NextFunction;
+
+export type RouteConfig = {
   method: 'get' | 'post' | 'put' | 'delete';
   path: string;
-  middlewares?: Function[];
-  handle: Function;
+  middlewares?: e.RequestHandler[];
+  handle: e.RequestHandler;
 }
 
 export abstract class Controller {

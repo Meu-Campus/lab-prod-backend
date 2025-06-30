@@ -10,24 +10,25 @@ export abstract class Controller {
 }
 
 export const createRouteDecorator = (method: 'get' | 'post' | 'put' | 'delete'): Function =>
-  function (path: string, middlewares: Function[] = []): Function {
+  function (path: string, middlewares: Function[] = []) {
     return function (target: any, propertyKey: string) {
-      if (!target.routeConfigs) {
-        target.routeConfigs = [];
+      const ctor = target.constructor;
+      if (!ctor.routeConfigs) {
+        ctor.routeConfigs = [];
       }
 
-      const handler = target[propertyKey];
-
-      if (handler instanceof Function) {
-        target.routeConfigs.push({
+      const handle = target[propertyKey];
+      if (handle instanceof Function) {
+        ctor.routeConfigs.push({
           path,
           method,
           middlewares,
-          handler
-        })
+          handle,
+        });
       }
-    }
-  }
+    };
+  };
+
 
 export const Get = createRouteDecorator('get');
 export const Post = createRouteDecorator('post');

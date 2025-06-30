@@ -8,33 +8,28 @@ import { controllers } from "./controllers";
 class Main {
   private buildRoutes(router: Router): Router {
     controllers.forEach(controller => {
-      if (!controller.routeConfigs) {
-        return;
-      }
+      const ctor = controller.constructor;
+      if (!ctor.routeConfigs) return;
 
-      const { routeConfigs } = controller;
+      const { routeConfigs } = ctor;
 
-      routeConfigs?.forEach((routeConfig: RouteConfig) => {
+      routeConfigs.forEach((routeConfig: RouteConfig) => {
         const { handle, method, middlewares, path } = routeConfig;
 
-        const jobs: any = middlewares.length
-          ? [...middlewares, handle]
-          : [handle];
+        const jobs = middlewares.length ? [...middlewares, handle] : [handle];
 
         switch (method) {
           case 'get':
-            router.get(path, jobs);
+            router.get(path, ...jobs);
             break;
           case 'post':
-            router.post(path, jobs);
+            router.post(path, ...jobs);
             break;
           case 'put':
-            router.put(path, jobs);
+            router.put(path, ...jobs);
             break;
           case 'delete':
-            router.delete(path, jobs);
-            break;
-          default:
+            router.delete(path, ...jobs);
             break;
         }
       });
@@ -51,10 +46,11 @@ class Main {
       await provider.execute();
     }));
 
-    const buildedRoutes = this.buildRoutes(router);
 
     server.use(express.json());
     server.use(cors());
+
+    const buildedRoutes = this.buildRoutes(router);
     server.use(buildedRoutes);
 
     server.listen(environment.port, environment.host, () => {

@@ -10,3 +10,13 @@ export const userLoginApiSchema = z.object({
   email: z.email(),
   password: z.string().min(6),
 });
+
+export const userRecoverApiSchema = z.object({
+  email: z.email(),
+});
+
+export const userPasswordResetApiSchema = z.object({
+  email: z.email(),
+  password: z.string().min(6),
+  token: z.string().min(1),
+});

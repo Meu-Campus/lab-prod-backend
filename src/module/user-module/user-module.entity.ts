@@ -4,5 +4,4 @@ export class UserModuleEntity extends BaseModel {
   name!: string;
   email!: string;
   password!: string;
-  phone?: string;
 }

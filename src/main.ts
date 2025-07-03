@@ -5,6 +5,8 @@ import cors from "cors";
 import { providers } from "./providers/providers";
 import { controllers } from "./controllers";
 import { RouteConfig } from "@src/server/routing";
+import { apiMiddleware } from "@src/middleware/api.middleware";
+import * as z from "zod/v4";
 
 class Main {
   private buildRoutes(router: Router): Router {
@@ -39,16 +41,18 @@ class Main {
   }
 
   async start() {
-    logger.info('Starting the application...');
+    logger.info('Starting the server...');
     const server = express();
+    server.use(cors());
+    server.use(apiMiddleware);
+    server.use(express.json());
+    z.config(z.locales.pt());
+
     const router = express.Router({ mergeParams: true });
 
     await Promise.all(providers.map(async (provider) => {
       await provider.execute();
     }));
-
-    server.use(express.json());
-    server.use(cors());
 
     const buildedRoutes = this.buildRoutes(router);
     server.use(buildedRoutes);

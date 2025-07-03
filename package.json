@@ -21,15 +21,20 @@
   },
   "homepage": "https://github.com/SrPatoS/lab-prod-backend#readme",
   "dependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.0.7",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "io-logger": "^1.2.0",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.16.1",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3",
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "zod": "^3.25.69"
   }
 }

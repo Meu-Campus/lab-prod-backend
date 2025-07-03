@@ -1,14 +1,14 @@
-﻿import { Controller, Get, Response, Request } from "@src/server/routing";
-import { userModuleModel } from "@src/module/user-module/user-module.model";
+﻿import { Controller, Response, Request, Post } from "@src/server/routing";
+import { UserModuleService } from "@src/module/user-module/user-module.service";
+import { apiCreateResponseUtil } from "@src/_utils/api-create-response.util";
+import { validationBodyMiddleware } from "@src/middleware/validation-body.middleware";
+import { userCreateApiSchema } from "@src/module/user-module/user-module.schema";
 
 export class UserModuleController extends Controller {
-  @Get("/user")
+  @Post("/user", [validationBodyMiddleware(userCreateApiSchema)])
   async create(req: Request, res: Response) {
-    return await userModuleModel.create({
-      name: "John Doe",
-      email: "sdsd",
-      password: "password123",
-      phone: "1234567890"
-    });
+    const service = new UserModuleService();
+    const result = await service.create(req.body);
+    return apiCreateResponseUtil(result, res);
   }
 }

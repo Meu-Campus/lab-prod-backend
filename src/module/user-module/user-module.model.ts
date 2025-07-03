@@ -17,10 +17,6 @@ const userModuleSchema: SchemaDef = {
     type: String,
     required: true
   },
-  phone: {
-    type: String,
-    required: false,
-  }
 }
 
 export const userModuleModel = createModel<UserModuleEntity>('user', userModuleSchema, 'user');

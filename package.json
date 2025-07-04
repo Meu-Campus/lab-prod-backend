@@ -9,17 +9,9 @@
   "engines": {
     "node": "22"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/SrPatoS/lab-prod-backend.git"
-  },
   "type": "module",
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/SrPatoS/lab-prod-backend/issues"
-  },
-  "homepage": "https://github.com/SrPatoS/lab-prod-backend#readme",
   "dependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.19",

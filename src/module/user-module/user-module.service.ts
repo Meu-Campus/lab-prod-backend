@@ -42,9 +42,13 @@ export class UserModuleService {
       return { message: defErrorMessage, errors: [{ key: "email", message: defErrorMessage }] };
     }
 
-    const token = jwt.sign({ email: findUser.email }, environment.tokenSecret, {
-      expiresIn: "18h"
+    const key = environment.tokenSecret;
+
+    const token = jwt.sign({ email: findUser.email }, key, {
+      expiresIn: "24h"
     });
+
+    console.log(environment.tokenSecret)
 
     return { message: "Login feito com sucesso!", errors: [], data: { token: token } }
   }

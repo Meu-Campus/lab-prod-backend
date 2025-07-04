@@ -1,4 +1,5 @@
 ﻿import * as e from 'express';
+import { authMiddleware } from "@src/middleware/auth.middleware";
 
 export type Request = e.Request;
 export type Response = e.Response;
@@ -16,11 +17,15 @@ export abstract class Controller {
 }
 
 export const createRouteDecorator = (method: 'get' | 'post' | 'put' | 'delete'): Function =>
-  function (path: string, middlewares: Function[] = []) {
+  function (path: string, middlewares: Function[] = [], disabledAuthentication?: boolean): Function {
     return function (target: any, propertyKey: string) {
       const ctor = target.constructor;
       if (!ctor.routeConfigs) {
         ctor.routeConfigs = [];
+      }
+
+      if (!disabledAuthentication) {
+        middlewares.unshift(authMiddleware);
       }
 
       const handle = target[propertyKey];

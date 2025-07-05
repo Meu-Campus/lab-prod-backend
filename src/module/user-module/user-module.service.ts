@@ -1,10 +1,14 @@
-﻿import { UserModuleEntity } from "@src/module/user-module/user-module.entity";
-import { ApiResponse } from "@src/_types/api-response.type";
+﻿import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { ApiResponse, File } from "@src/_types/api-response.type";
+import { UserModuleEntity } from "@src/module/user-module/user-module.entity";
 import { userModuleModel } from "@src/module/user-module/user-module.model";
 import { environment } from "@src/environment";
+import * as nodemailer from 'nodemailer';
 import * as bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import * as nodemailer from 'nodemailer';
+import { v4 as uuidv4 } from "uuid";
+import { S3Provider } from "@src/providers/mongoose/s3.provider";
+import { logger } from "io-logger";
 
 export class UserModuleService {
   async create(data: UserModuleEntity): Promise<ApiResponse> {
@@ -116,5 +120,28 @@ export class UserModuleService {
     }).exec();
 
     return { message: "Senha atualizada com sucesso!", errors: [] }
+  }
+
+  async uploadAvatar(userId: string, file: File): Promise<ApiResponse> {
+    const extension = file.originalname.split(".").pop();
+
+    const command = new PutObjectCommand({
+      Bucket: environment.bucketName,
+      Key: `${uuidv4()}.${extension}`,
+      Body: file.buffer,
+      ContentType: file.mimetype,
+    });
+
+    try {
+      await new S3Provider().getS3().send(command);
+
+      const imageUrl = `${environment.publicImageDevUrl}/${environment.bucketName}/${command.input.Key}`;
+
+      logger.alert("new avatar uploaded");
+    } catch (err) {
+      logger.error(err as Error);
+    }
+
+    return { message: "Avatar enviado com sucesso!", errors: [] };
   }
 }

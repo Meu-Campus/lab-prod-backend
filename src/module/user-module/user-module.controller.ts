@@ -1,4 +1,4 @@
-﻿import { Controller, Response, Request, Post, Get } from "@src/server/routing";
+﻿import { Controller, Response, Request, Post, Get, Put } from "@src/server/routing";
 import { UserModuleService } from "@src/module/user-module/user-module.service";
 import { apiCreateResponseUtil } from "@src/_utils/api-create-response.util";
 import { validationBodyMiddleware } from "@src/middleware/validation-body.middleware";
@@ -7,6 +7,7 @@ import {
   userLoginApiSchema, userPasswordResetApiSchema,
   userRecoverApiSchema
 } from "@src/module/user-module/user-module.schema";
+import { multerUpload } from "@src/multer";
 
 export class UserModuleController extends Controller {
   @Post("/user", [validationBodyMiddleware(userCreateApiSchema)], true)
@@ -44,5 +45,21 @@ export class UserModuleController extends Controller {
       errors: [],
       message: ''
     }, res);
+  }
+
+  @Put("/user/me", [multerUpload.single("image")])
+  async uploadAvatar(req: Request, res: Response) {
+    const service = new UserModuleService();
+    const file = req.file;
+
+    if (!file) {
+      return apiCreateResponseUtil({
+        message: "Nenhum arquivo enviado.",
+        errors: [{ key: "file", message: "Nenhum arquivo enviado." }]
+      }, res);
+    }
+
+    const result = await service.uploadAvatar(res.locals["userData"]._id, file);
+    return apiCreateResponseUtil(result, res);
   }
 }

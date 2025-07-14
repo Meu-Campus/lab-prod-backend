@@ -10,8 +10,8 @@ import {
 import { apiCreateResponseUtil } from "@src/_utils/api-create-response.util";
 import { SubjectModuleService } from "@src/module/subject-module/subject-module.service";
 
-export class ExampleModuleController extends Controller {
-	@Post("/example")
+export class TeacherModuleController extends Controller {
+	@Post("/teacher")
 	async create(req: Request, res: Response) {
 		const service = new SubjectModuleService();
 		const result = await service.create({
@@ -21,7 +21,7 @@ export class ExampleModuleController extends Controller {
 		return apiCreateResponseUtil(result, res);
 	}
 
-	@Put("/example")
+	@Put("/teacher")
 	async update(req: Request, res: Response) {
 		const service = new SubjectModuleService();
 		const { id } = req.query;
@@ -29,7 +29,7 @@ export class ExampleModuleController extends Controller {
 		return apiCreateResponseUtil(result, res);
 	}
 
-	@Get("/example")
+	@Get("/teacher")
 	async get(req: Request, res: Response) {
 		const service = new SubjectModuleService();
 		const { page, perPage, ...query } = req.query;
@@ -41,7 +41,7 @@ export class ExampleModuleController extends Controller {
 		return apiCreateResponseUtil(result, res);
 	}
 
-	@Delete("/example")
+	@Delete("/teacher")
 	async delete(req: Request, res: Response) {
 		const service = new SubjectModuleService();
 		const { id } = req.query;

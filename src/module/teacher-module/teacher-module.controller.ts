@@ -8,12 +8,12 @@ import {
 	Delete
 } from "@src/server/routing";
 import { apiCreateResponseUtil } from "@src/_utils/api-create-response.util";
-import { SubjectModuleService } from "@src/module/subject-module/subject-module.service";
+import { TeacherModuleService } from "@src/module/teacher-module/teacher-module.service";
 
 export class TeacherModuleController extends Controller {
 	@Post("/teacher")
 	async create(req: Request, res: Response) {
-		const service = new SubjectModuleService();
+		const service = new TeacherModuleService();
 		const result = await service.create({
 			...req.body,
 			userId: res.locals["userData"]._id
@@ -23,7 +23,7 @@ export class TeacherModuleController extends Controller {
 
 	@Put("/teacher")
 	async update(req: Request, res: Response) {
-		const service = new SubjectModuleService();
+		const service = new TeacherModuleService();
 		const { id } = req.query;
 		const result = await service.update(id as string, req.body);
 		return apiCreateResponseUtil(result, res);
@@ -31,7 +31,7 @@ export class TeacherModuleController extends Controller {
 
 	@Get("/teacher")
 	async get(req: Request, res: Response) {
-		const service = new SubjectModuleService();
+		const service = new TeacherModuleService();
 		const { page, perPage, ...query } = req.query;
 		const result = await service.getPaginated(
 			Number(page) ?? 1,
@@ -43,7 +43,7 @@ export class TeacherModuleController extends Controller {
 
 	@Delete("/teacher")
 	async delete(req: Request, res: Response) {
-		const service = new SubjectModuleService();
+		const service = new TeacherModuleService();
 		const { id } = req.query;
 		const result = await service.delete(id as string);
 		return apiCreateResponseUtil(result, res);

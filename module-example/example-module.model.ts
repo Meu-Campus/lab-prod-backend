@@ -2,7 +2,7 @@ import {
 	createModel,
 	SchemaDef,
 } from "@src/server/mongo";
-import { SubJectEntity as SubjectEntity } from "./example-module.entity";
+import { SubjectEntity } from "./example-module.entity";
 
 export const subjectModuleSchema: SchemaDef = {
 	name: {

@@ -1,11 +1,11 @@
 import { ApiResponse } from "@src/_types/api-response.type";
-import { SubjectEntity } from "./teacher-module.entity";
+import { TeacherEntity } from "./teacher-module.entity";
 import { teacherModuleModel } from "./teacher-module.model";
 import { PaginatedResponse } from "@src/_types/paginated.type";
 
 export class TeacherModuleService {
 	async create(
-		data: SubjectEntity
+		data: TeacherEntity
 	): Promise<ApiResponse> {
 		await teacherModuleModel.create(data);
 
@@ -18,7 +18,7 @@ export class TeacherModuleService {
 
 	async update(
 		id: string,
-		data: SubjectEntity
+		data: TeacherEntity
 	): Promise<ApiResponse> {
 		await teacherModuleModel
 			.updateOne(

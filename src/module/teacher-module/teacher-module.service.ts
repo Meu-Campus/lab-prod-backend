@@ -104,10 +104,11 @@ export class TeacherModuleService {
 	}
 
 	async all(): Promise<ApiResponse<TeacherEntity[]>> {
-		const list = await teacherModuleModel
-			.find({ active: true })
-			.sort({ name: 1 })
-			.exec();
+		const list = await teacherModuleModel.aggregate([
+			{ $match: { active: true } },
+			{ $sort: { name: 1 } },
+			{ $addFields: { id: "$_id" } }
+		]).exec();
 
 		return {
 			errors: [],

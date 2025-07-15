@@ -69,8 +69,26 @@ export class ClasseModuleService {
 					$limit: perPage
 				},
 				{
+					$lookup: {
+						from: "subject",
+						localField: "subjectId",
+						foreignField: "_id",
+						as: "subject"
+					}
+				},
+				{
+					$lookup: {
+						from: "teacher",
+						localField: "teacherId",
+						foreignField: "_id",
+						as: "teacher"
+					}
+				},
+				{
 					$addFields: {
 						id: "$_id",
+						teacher: { $first: "$teacher" },
+						subject: { $first: "$subject" }
 					}
 				}
 			])

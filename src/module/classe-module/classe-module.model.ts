@@ -5,11 +5,27 @@ import {
 import { ClasseEntity } from "./classe-module.entity";
 
 export const classeModuleSchema: SchemaDef = {
-	name: {
-		type: String,
+	endTime: {
+		type: Date,
 		required: true,
 	},
 	userId: {
+		type: String,
+		required: true,
+	},
+	room: {
+		type: String,
+		required: true,
+	},
+	startTime: {
+		type: Date,
+		required: true,
+	},
+	subjectId: {
+		type: String,
+		required: true,
+	},
+	teacherId: {
 		type: String,
 		required: true,
 	},

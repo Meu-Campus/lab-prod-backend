@@ -103,10 +103,11 @@ export class SubjectModuleService {
 	}
 
 	async all(): Promise<ApiResponse<SubjectEntity[]>> {
-		const list = await subjectModuleModel
-			.find({ active: true })
-			.sort({ name: 1 })
-			.exec();
+		const list = await subjectModuleModel.aggregate([
+			{ $match: { active: true } },
+			{ $sort: { name: 1 } },
+			{ $addFields: { id: "$_id" } }
+		]).exec();
 
 		return {
 			errors: [],

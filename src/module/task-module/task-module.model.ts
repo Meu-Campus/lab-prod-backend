@@ -5,14 +5,26 @@ import {
 import { TaskEntity } from "./task-module.entity";
 
 export const taskModuleSchema: SchemaDef = {
-	name: {
+	description: {
 		type: String,
-		required: true,
-		text: true
+		required: true
 	},
 	userId: {
 		type: String,
 		required: true
+	},
+	dueDate: {
+		type: Date,
+		required: true
+	},
+	subjectId: {
+		type: String,
+		required: true
+	},
+	title: {
+		type: String,
+		required: true,
+		text: true
 	}
 };
 

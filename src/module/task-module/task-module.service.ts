@@ -68,8 +68,22 @@ export class TaskModuleService {
 					$limit: perPage
 				},
 				{
+					$lookup: {
+						from: "subject",
+						localField: "subjectId",
+						foreignField: "_id",
+						as: "subject"
+					}
+				},
+				{
 					$addFields: {
 						id: "$_id",
+						subject: { $first: "$subject" }
+					}
+				},
+				{
+					$addFields: {
+						id: "$_id"
 					}
 				}
 			])

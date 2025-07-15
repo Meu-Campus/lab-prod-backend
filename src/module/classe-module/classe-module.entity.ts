@@ -1,7 +1,6 @@
 import { BaseModel } from "@src/server/mongo";
 
-export class TeacherEntity extends BaseModel {
+export class ClasseEntity extends BaseModel {
 	name!: string;
 	userId!: string;
-	email!: string;
 }

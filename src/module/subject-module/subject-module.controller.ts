@@ -9,9 +9,10 @@ import {
 } from "@src/server/routing";
 import { apiCreateResponseUtil } from "@src/_utils/api-create-response.util";
 import { SubjectModuleService } from "@src/module/subject-module/subject-module.service";
+import { formatQueryUtil } from "@src/_utils/format-query.util";
 
 export class SubjectModuleController extends Controller {
-	@Post("/subject")
+	@Post("/subjects")
 	async create(req: Request, res: Response) {
 		const service = new SubjectModuleService();
 		const result = await service.create({
@@ -21,7 +22,7 @@ export class SubjectModuleController extends Controller {
 		return apiCreateResponseUtil(result, res);
 	}
 
-	@Put("/subject")
+	@Put("/subjects")
 	async update(req: Request, res: Response) {
 		const service = new SubjectModuleService();
 		const { id } = req.query;
@@ -29,10 +30,13 @@ export class SubjectModuleController extends Controller {
 		return apiCreateResponseUtil(result, res);
 	}
 
-	@Get("/subject")
+	@Get("/subjects")
 	async get(req: Request, res: Response) {
 		const service = new SubjectModuleService();
-		const { page, perPage, ...query } = req.query;
+		let { page, perPage, ...query } = req.query;
+
+		query = formatQueryUtil(query);
+
 		const result = await service.getPaginated(
 			Number(page) ?? 1,
 			Number(perPage) ?? 10,
@@ -41,11 +45,18 @@ export class SubjectModuleController extends Controller {
 		return apiCreateResponseUtil(result, res);
 	}
 
-	@Delete("/subject")
+	@Delete("/subjects")
 	async delete(req: Request, res: Response) {
 		const service = new SubjectModuleService();
 		const { id } = req.query;
 		const result = await service.delete(id as string);
+		return apiCreateResponseUtil(result, res);
+	}
+
+	@Get("/subjects/all")
+	async getAll(req: Request, res: Response) {
+		const service = new SubjectModuleService();
+		const result = await service.all();
 		return apiCreateResponseUtil(result, res);
 	}
 }

@@ -1,13 +1,13 @@
 import { ApiResponse } from "@src/_types/api-response.type";
-import { SubjectEntity } from "./example-module.entity";
-import { exampleModuleModel } from "./example-module.model";
+import { ClasseEntity } from "./classe-module.entity";
+import { classeModuleModel } from "./classe-module.model";
 import { PaginatedResponse } from "@src/_types/paginated.type";
 
-export class ExampleModuleService {
+export class ClasseModuleService {
 	async create(
-		data: SubjectEntity
+		data: ClasseEntity
 	): Promise<ApiResponse> {
-		await exampleModuleModel.create(data);
+		await classeModuleModel.create(data);
 
 		return {
 			errors: [],
@@ -18,9 +18,9 @@ export class ExampleModuleService {
 
 	async update(
 		id: string,
-		data: SubjectEntity
+		data: ClasseEntity
 	): Promise<ApiResponse> {
-		await exampleModuleModel
+		await classeModuleModel
 			.updateOne(
 				{ _id: id },
 				{
@@ -42,14 +42,14 @@ export class ExampleModuleService {
 		perPage: number,
 		query?: Record<string, any>
 	): Promise<ApiResponse<PaginatedResponse>> {
-		const total = await exampleModuleModel
+		const total = await classeModuleModel
 			.countDocuments({
 				active: true,
 				...query
 			})
 			.exec();
 
-		const list = await exampleModuleModel
+		const list = await classeModuleModel
 			.aggregate([
 				{
 					$match: {
@@ -90,7 +90,7 @@ export class ExampleModuleService {
 	}
 
 	async delete(id: string): Promise<ApiResponse> {
-		await exampleModuleModel.updateOne({ _id: id }, {
+		await classeModuleModel.updateOne({ _id: id }, {
 			$set: {
 				active: false
 			}

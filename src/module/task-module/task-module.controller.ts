@@ -8,13 +8,12 @@ import {
 	Delete
 } from "@src/server/routing";
 import { apiCreateResponseUtil } from "@src/_utils/api-create-response.util";
-import { SubjectModuleService } from "@src/module/subject-module/subject-module.service";
-import { formatQueryUtil } from "../src/_utils/format-query.util";
+import { TaskModuleService } from "@src/module/task-module/task-module.service";
 
-export class ExampleModuleController extends Controller {
-	@Post("/example")
+export class TaskModuleController extends Controller {
+	@Post("/tasks")
 	async create(req: Request, res: Response) {
-		const service = new SubjectModuleService();
+		const service = new TaskModuleService();
 		const result = await service.create({
 			...req.body,
 			userId: res.locals["userData"]._id
@@ -22,21 +21,18 @@ export class ExampleModuleController extends Controller {
 		return apiCreateResponseUtil(result, res);
 	}
 
-	@Put("/example")
+	@Put("/tasks")
 	async update(req: Request, res: Response) {
-		const service = new SubjectModuleService();
+		const service = new TaskModuleService();
 		const { id } = req.query;
 		const result = await service.update(id as string, req.body);
 		return apiCreateResponseUtil(result, res);
 	}
 
-	@Get("/example")
+	@Get("/tasks")
 	async get(req: Request, res: Response) {
-		const service = new SubjectModuleService();
-		let { page, perPage, ...query } = req.query;
-
-		query = formatQueryUtil(query);
-
+		const service = new TaskModuleService();
+		const { page, perPage, ...query } = req.query;
 		const result = await service.getPaginated(
 			Number(page) ?? 1,
 			Number(perPage) ?? 10,
@@ -45,9 +41,9 @@ export class ExampleModuleController extends Controller {
 		return apiCreateResponseUtil(result, res);
 	}
 
-	@Delete("/example")
+	@Delete("/tasks")
 	async delete(req: Request, res: Response) {
-		const service = new SubjectModuleService();
+		const service = new TaskModuleService();
 		const { id } = req.query;
 		const result = await service.delete(id as string);
 		return apiCreateResponseUtil(result, res);

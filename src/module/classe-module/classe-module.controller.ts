@@ -8,13 +8,13 @@ import {
 	Delete
 } from "@src/server/routing";
 import { apiCreateResponseUtil } from "@src/_utils/api-create-response.util";
-import { SubjectModuleService } from "@src/module/subject-module/subject-module.service";
-import { formatQueryUtil } from "../src/_utils/format-query.util";
+import { ClasseModuleService } from "@src/module/classe-module/classe-module.service";
+import { formatQueryUtil } from "@src/_utils/format-query.util";
 
-export class ExampleModuleController extends Controller {
-	@Post("/example")
+export class ClasseModuleController extends Controller {
+	@Post("/classes")
 	async create(req: Request, res: Response) {
-		const service = new SubjectModuleService();
+		const service = new ClasseModuleService();
 		const result = await service.create({
 			...req.body,
 			userId: res.locals["userData"]._id
@@ -22,17 +22,17 @@ export class ExampleModuleController extends Controller {
 		return apiCreateResponseUtil(result, res);
 	}
 
-	@Put("/example")
+	@Put("/classes")
 	async update(req: Request, res: Response) {
-		const service = new SubjectModuleService();
+		const service = new ClasseModuleService();
 		const { id } = req.query;
 		const result = await service.update(id as string, req.body);
 		return apiCreateResponseUtil(result, res);
 	}
 
-	@Get("/example")
+	@Get("/classes")
 	async get(req: Request, res: Response) {
-		const service = new SubjectModuleService();
+		const service = new ClasseModuleService();
 		let { page, perPage, ...query } = req.query;
 
 		query = formatQueryUtil(query);
@@ -45,9 +45,9 @@ export class ExampleModuleController extends Controller {
 		return apiCreateResponseUtil(result, res);
 	}
 
-	@Delete("/example")
+	@Delete("/classes")
 	async delete(req: Request, res: Response) {
-		const service = new SubjectModuleService();
+		const service = new ClasseModuleService();
 		const { id } = req.query;
 		const result = await service.delete(id as string);
 		return apiCreateResponseUtil(result, res);

@@ -44,7 +44,8 @@ export class TeacherModuleService {
 	): Promise<ApiResponse<PaginatedResponse>> {
 		const total = await teacherModuleModel
 			.countDocuments({
-				active: true
+				active: true,
+				...query
 			})
 			.exec();
 
@@ -58,7 +59,7 @@ export class TeacherModuleService {
 				},
 				{
 					$sort: {
-						createdAt: -1
+						name: 1
 					}
 				},
 				{
@@ -66,6 +67,11 @@ export class TeacherModuleService {
 				},
 				{
 					$limit: perPage
+				},
+				{
+					$addFields: {
+						id: "$_id"
+					}
 				}
 			])
 			.exec();
@@ -94,6 +100,19 @@ export class TeacherModuleService {
 			errors: [],
 			data: {},
 			message: "Excluída com sucesso!"
+		};
+	}
+
+	async all(): Promise<ApiResponse<TeacherEntity[]>> {
+		const list = await teacherModuleModel
+			.find({ active: true })
+			.sort({ name: 1 })
+			.exec();
+
+		return {
+			errors: [],
+			data: list,
+			message: "Lista de professores obtida com sucesso!"
 		};
 	}
 }

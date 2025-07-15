@@ -65,6 +65,11 @@ export class SubjectModuleService {
 					$skip: (page - 1) * perPage
 				},
 				{
+					$addFields: {
+						id: "$_id"
+					}
+				},
+				{
 					$limit: perPage
 				}
 			])
@@ -94,6 +99,19 @@ export class SubjectModuleService {
 			errors: [],
 			data: {},
 			message: "Disciplina excluída com sucesso!"
+		};
+	}
+
+	async all(): Promise<ApiResponse<SubjectEntity[]>> {
+		const list = await subjectModuleModel
+			.find({ active: true })
+			.sort({ name: 1 })
+			.exec();
+
+		return {
+			errors: [],
+			data: list,
+			message: "Lista de disciplinas obtida com sucesso!"
 		};
 	}
 }

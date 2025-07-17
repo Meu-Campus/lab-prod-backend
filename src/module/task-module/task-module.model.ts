@@ -25,6 +25,10 @@ export const taskModuleSchema: SchemaDef = {
 		type: String,
 		required: true,
 		text: true
+	},
+	isDelivered: {
+		type: Boolean,
+		default: false
 	}
 };
 

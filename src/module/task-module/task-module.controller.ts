@@ -48,4 +48,12 @@ export class TaskModuleController extends Controller {
 		const result = await service.delete(id as string);
 		return apiCreateResponseUtil(result, res);
 	}
+
+	@Get("/tasks/upcoming")
+	async getUpcoming(req: Request, res: Response) {
+		const service = new TaskModuleService();
+		const { page, perPage, ...query } = req.query;
+		const result = await service.getUpcoming();
+		return apiCreateResponseUtil(result, res);
+	}
 }

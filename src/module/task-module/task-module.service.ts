@@ -115,4 +115,43 @@ export class TaskModuleService {
 			message: "Excluída com sucesso!"
 		};
 	}
+
+	async getUpcoming(): Promise<ApiResponse> {
+		const data = await taskModuleModel.aggregate([
+			{
+				$match: {
+					active: true,
+					isDelivered: false
+				}
+			},
+			{
+				$sort: {
+					dueDate: 1
+				}
+			},
+			{
+				$lookup: {
+					from: "subject",
+					localField: "subjectId",
+					foreignField: "_id",
+					as: "subject"
+				}
+			},
+			{
+				$addFields: {
+					id: "$_id",
+					subject: { $first: "$subject" }
+				}
+			},
+			{
+				$limit: 5
+			}
+		]).exec();
+
+		return {
+			errors: [],
+			data: data,
+			message: "Tarefas futuras obtidas com sucesso!"
+		};
+	}
 }

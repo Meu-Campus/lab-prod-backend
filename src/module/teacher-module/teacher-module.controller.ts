@@ -26,7 +26,7 @@ export class TeacherModuleController extends Controller {
 	async update(req: Request, res: Response) {
 		const service = new TeacherModuleService();
 		const { id } = req.query;
-		const result = await service.update(id as string, req.body);
+		const result = await service.update(id as string, req.body, res.locals["userData"]._id);
 		return apiCreateResponseUtil(result, res);
 	}
 
@@ -35,7 +35,7 @@ export class TeacherModuleController extends Controller {
 		const service = new TeacherModuleService();
 		let { page, perPage, ...query } = req.query;
 
-		query = formatQueryUtil(query);
+		query = formatQueryUtil({ ...query, userId: res.locals["userData"]._id });
 
 		const result = await service.getPaginated(
 			Number(page) ?? 1,
@@ -49,14 +49,14 @@ export class TeacherModuleController extends Controller {
 	async delete(req: Request, res: Response) {
 		const service = new TeacherModuleService();
 		const { id } = req.query;
-		const result = await service.delete(id as string);
+		const result = await service.delete(id as string, res.locals["userData"]._id);
 		return apiCreateResponseUtil(result, res);
 	}
 
 	@Get("/teachers/all")
 	async getAll(req: Request, res: Response) {
 		const service = new TeacherModuleService();
-		const result = await service.all();
+		const result = await service.all(res.locals["userData"]._id);
 		return apiCreateResponseUtil(result, res);
 	}
 }

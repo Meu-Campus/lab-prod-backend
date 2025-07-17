@@ -25,7 +25,7 @@ export class TaskModuleController extends Controller {
 	async update(req: Request, res: Response) {
 		const service = new TaskModuleService();
 		const { id } = req.query;
-		const result = await service.update(id as string, req.body);
+		const result = await service.update(id as string, req.body, res.locals["userData"]._id);
 		return apiCreateResponseUtil(result, res);
 	}
 
@@ -36,7 +36,7 @@ export class TaskModuleController extends Controller {
 		const result = await service.getPaginated(
 			Number(page) ?? 1,
 			Number(perPage) ?? 10,
-			query
+			{ ...query, userId: res.locals["userData"]._id }
 		);
 		return apiCreateResponseUtil(result, res);
 	}
@@ -45,7 +45,7 @@ export class TaskModuleController extends Controller {
 	async delete(req: Request, res: Response) {
 		const service = new TaskModuleService();
 		const { id } = req.query;
-		const result = await service.delete(id as string);
+		const result = await service.delete(id as string, res.locals["userData"]._id);
 		return apiCreateResponseUtil(result, res);
 	}
 
@@ -53,7 +53,7 @@ export class TaskModuleController extends Controller {
 	async getUpcoming(req: Request, res: Response) {
 		const service = new TaskModuleService();
 		const { page, perPage, ...query } = req.query;
-		const result = await service.getUpcoming();
+		const result = await service.getUpcoming(res.locals["userData"]._id);
 		return apiCreateResponseUtil(result, res);
 	}
 }

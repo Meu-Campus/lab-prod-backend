@@ -18,11 +18,12 @@ export class TeacherModuleService {
 
 	async update(
 		id: string,
-		data: TeacherEntity
+		data: TeacherEntity,
+		userId: string
 	): Promise<ApiResponse> {
 		await teacherModuleModel
 			.updateOne(
-				{ _id: id },
+				{ _id: id, userId: userId },
 				{
 					$set: data
 				}
@@ -89,8 +90,8 @@ export class TeacherModuleService {
 		};
 	}
 
-	async delete(id: string): Promise<ApiResponse> {
-		await teacherModuleModel.updateOne({ _id: id }, {
+		async delete(id: string, userId: string): Promise<ApiResponse> {
+		await teacherModuleModel.updateOne({ _id: id, userId: userId }, {
 			$set: {
 				active: false
 			}
@@ -103,9 +104,9 @@ export class TeacherModuleService {
 		};
 	}
 
-	async all(): Promise<ApiResponse<TeacherEntity[]>> {
+	async all(userId: string): Promise<ApiResponse<TeacherEntity[]>> {
 		const list = await teacherModuleModel.aggregate([
-			{ $match: { active: true } },
+			{ $match: { active: true, userId: userId } },
 			{ $sort: { name: 1 } },
 			{ $addFields: { id: "$_id" } }
 		]).exec();

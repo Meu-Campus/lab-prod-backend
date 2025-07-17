@@ -19,11 +19,12 @@ export class ClasseModuleService {
 
 	async update(
 		id: string,
-		data: ClasseEntity
+		data: ClasseEntity,
+		userId: string
 	): Promise<ApiResponse> {
 		await classeModuleModel
 			.updateOne(
-				{ _id: id },
+				{ _id: id, userId: userId },
 				{
 					$set: data
 				}
@@ -130,8 +131,8 @@ export class ClasseModuleService {
 		};
 	}
 
-	async delete(id: string): Promise<ApiResponse> {
-		await classeModuleModel.updateOne({ _id: id }, {
+	async delete(id: string, userId: string): Promise<ApiResponse> {
+		await classeModuleModel.updateOne({ _id: id, userId: userId }, {
 			$set: {
 				active: false
 			}

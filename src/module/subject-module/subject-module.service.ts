@@ -18,11 +18,12 @@ export class SubjectModuleService {
 
 	async update(
 		id: string,
-		data: SubjectEntity
+		data: SubjectEntity,
+		userId: string
 	): Promise<ApiResponse> {
 		await subjectModuleModel
 			.updateOne(
-				{ _id: id },
+				{ _id: id, userId: userId },
 				{
 					$set: data
 				}
@@ -44,7 +45,8 @@ export class SubjectModuleService {
 	): Promise<ApiResponse<PaginatedResponse>> {
 		const total = await subjectModuleModel
 			.countDocuments({
-				active: true
+				active: true,
+				...query
 			})
 			.exec();
 
@@ -88,8 +90,8 @@ export class SubjectModuleService {
 		};
 	}
 
-	async delete(id: string): Promise<ApiResponse> {
-		await subjectModuleModel.updateOne({ _id: id }, {
+		async delete(id: string, userId: string): Promise<ApiResponse> {
+		await subjectModuleModel.updateOne({ _id: id, userId: userId }, {
 			$set: {
 				active: false
 			}
@@ -102,9 +104,9 @@ export class SubjectModuleService {
 		};
 	}
 
-	async all(): Promise<ApiResponse<SubjectEntity[]>> {
+	async all(userId: string): Promise<ApiResponse<SubjectEntity[]>> {
 		const list = await subjectModuleModel.aggregate([
-			{ $match: { active: true } },
+			{ $match: { active: true, userId: userId } },
 			{ $sort: { name: 1 } },
 			{ $addFields: { id: "$_id" } }
 		]).exec();

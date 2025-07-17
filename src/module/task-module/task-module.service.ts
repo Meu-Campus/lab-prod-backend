@@ -18,11 +18,12 @@ export class TaskModuleService {
 
 	async update(
 		id: string,
-		data: TaskEntity
+		data: TaskEntity,
+		userId: string
 	): Promise<ApiResponse> {
 		await taskModuleModel
 			.updateOne(
-				{ _id: id },
+				{ _id: id, userId: userId },
 				{
 					$set: data
 				}
@@ -102,8 +103,8 @@ export class TaskModuleService {
 		};
 	}
 
-	async delete(id: string): Promise<ApiResponse> {
-		await taskModuleModel.updateOne({ _id: id }, {
+	async delete(id: string, userId: string): Promise<ApiResponse> {
+		await taskModuleModel.updateOne({ _id: id, userId: userId }, {
 			$set: {
 				active: false
 			}
@@ -116,12 +117,13 @@ export class TaskModuleService {
 		};
 	}
 
-	async getUpcoming(): Promise<ApiResponse> {
+	async getUpcoming(userId: string): Promise<ApiResponse> {
 		const data = await taskModuleModel.aggregate([
 			{
 				$match: {
 					active: true,
-					isDelivered: false
+					isDelivered: false,
+					userId: userId
 				}
 			},
 			{

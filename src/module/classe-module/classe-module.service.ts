@@ -2,6 +2,7 @@ import { ApiResponse } from "@src/_types/api-response.type";
 import { ClasseEntity } from "./classe-module.entity";
 import { classeModuleModel } from "./classe-module.model";
 import { PaginatedResponse } from "@src/_types/paginated.type";
+import { endOfDay, startOfDay } from "date-fns";
 
 export class ClasseModuleService {
 	async create(
@@ -49,6 +50,9 @@ export class ClasseModuleService {
 			})
 			.exec();
 
+		const today = new Date();
+		const todayStr = today.toISOString().split("T")[0];
+
 		const list = await classeModuleModel
 			.aggregate([
 				{
@@ -88,8 +92,27 @@ export class ClasseModuleService {
 					$addFields: {
 						id: "$_id",
 						teacher: { $first: "$teacher" },
-						subject: { $first: "$subject" }
+						subject: { $first: "$subject" },
+						startTime: {
+							$cond: [
+								{ $regexMatch: { input: "$startTime", regex: /^[0-9]{2}:[0-9]{2}$/ } },
+								{
+									$dateFromString: {
+										dateString: {
+											$concat: [
+												{ $dateToString: { date: "$$NOW", format: "%Y-%m-%d" } },
+												"T",
+												"$startTime",
+												":00Z"
+											]
+										}
+									}
+								},
+								"$startTime"
+							]
+						}
 					}
+
 				}
 			])
 			.exec();
@@ -118,6 +141,106 @@ export class ClasseModuleService {
 			errors: [],
 			data: {},
 			message: "Excluída com sucesso!"
+		};
+	}
+
+	async dailyClasses(page: number, perPage: number, userId: string): Promise<ApiResponse<PaginatedResponse>> {
+		const today = new Date();
+		const startOfToday = startOfDay(today);
+		const endOfToday = endOfDay(today);
+		const todayDayOfWeek = today.getDay();
+
+		const baseMatch = {
+			active: true,
+			userId: userId,
+			$or: [
+				{ isRecurring: true, dayOfWeek: todayDayOfWeek },
+				{ isRecurring: { $ne: true }, date: { $gte: startOfToday, $lt: endOfToday } }
+			]
+		};
+
+		console.log("Base Match:", JSON.stringify(baseMatch));
+
+		const total = await classeModuleModel.countDocuments(baseMatch).exec();
+
+		const list = await classeModuleModel.aggregate([
+			{ $match: baseMatch },
+			{ $sort: { date: 1 } },
+			{ $skip: (page - 1) * perPage },
+			{ $limit: perPage },
+			{
+				$lookup: {
+					from: "subjects",
+					localField: "subjectId",
+					foreignField: "_id",
+					as: "subjectInfo"
+				}
+			},
+			{
+				$lookup: {
+					from: "teachers",
+					localField: "teacherId",
+					foreignField: "_id",
+					as: "teacherInfo"
+				}
+			},
+			{
+				$unwind: {
+					path: "$subjectInfo",
+					preserveNullAndEmptyArrays: true
+				}
+			},
+			{
+				$unwind: {
+					path: "$teacherInfo",
+					preserveNullAndEmptyArrays: true
+				}
+			},
+			{
+				$project: {
+					_id: 0,
+					id: "$_id",
+					room: "$room",
+					startTime: {
+						$cond: [
+							{ $regexMatch: { input: "$startTime", regex: /^[0-9]{2}:[0-9]{2}$/ } },
+							{
+								$dateFromString: {
+									dateString: {
+										$concat: [
+											{ $dateToString: { date: "$$NOW", format: "%Y-%m-%d" } },
+											"T",
+											"$startTime",
+											":00Z"
+										]
+									}
+								}
+							},
+							"$startTime"
+						]
+					},
+					subject: {
+						id: "$subjectInfo._id",
+						name: "$subjectInfo.name"
+					},
+					teacher: {
+						id: "$teacherInfo._id",
+						name: "$teacherInfo.name"
+					}
+				}
+			}
+		]).exec();
+
+		return {
+			errors: [],
+			message: "",
+			data: {
+				page,
+				perPage,
+				pages: Math.ceil(total / perPage),
+				list,
+				total
+			}
 		};
 	}
 }

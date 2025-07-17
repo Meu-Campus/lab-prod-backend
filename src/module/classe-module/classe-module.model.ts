@@ -1,34 +1,43 @@
 import {
 	createModel,
-	SchemaDef,
+	SchemaDef
 } from "@src/server/mongo";
 import { ClasseEntity } from "./classe-module.entity";
 
 export const classeModuleSchema: SchemaDef = {
-	endTime: {
-		type: Date,
-		required: true,
-	},
 	userId: {
 		type: String,
-		required: true,
+		required: true
 	},
 	room: {
 		type: String,
 		required: true,
+		text: true
 	},
 	startTime: {
-		type: Date,
-		required: true,
+		type: String,
+		default: null
 	},
 	subjectId: {
 		type: String,
-		required: true,
+		required: true
 	},
 	teacherId: {
 		type: String,
-		required: true,
+		required: true
 	},
+	isRecurring: {
+		type: Boolean,
+		default: false
+	},
+	dayOfWeek: {
+		type: Number,
+		default: null
+	},
+	date: {
+		type: Date,
+		default: null
+	}
 };
 
 export const classeModuleModel =

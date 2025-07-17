@@ -52,4 +52,16 @@ export class ClasseModuleController extends Controller {
 		const result = await service.delete(id as string);
 		return apiCreateResponseUtil(result, res);
 	}
+
+	@Get("/classes/dashboard")
+	async getDashboard(req: Request, res: Response) {
+		const service = new ClasseModuleService();
+		let { page, perPage, ...query } = req.query;
+		const result = await service.dailyClasses(
+			Number(page) ?? 1,
+			Number(perPage) ?? 10,
+			res.locals["userData"]._id
+		);
+		return apiCreateResponseUtil(result, res);
+	}
 }

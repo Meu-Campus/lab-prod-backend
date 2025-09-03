@@ -16,6 +16,7 @@ export class MongooseProvider implements IProvider {
         dbName: environment.mongoDb,
         authSource: 'admin'
       });
+			logger.info("Connected to MongoDB");
     } catch (error: any) {
       logger.error(error);
     }

@@ -17,7 +17,7 @@ afterAll(async () => {
 	await mongoose.connection.close();
 });
 
-describe("POST /api/user - User Creation Endpoint", () => {
+describe("POST /user - User Creation Endpoint", () => {
 	// Limpar usuários antes de cada teste para garantir isolamento
 	beforeEach(async () => {
 		await userModuleModel.deleteMany({});
@@ -40,7 +40,7 @@ describe("POST /api/user - User Creation Endpoint", () => {
 
 		// A validação do Zod agora deve retornar 400
 		expect(response.status).toBe(400);
-		expect(response.body.errors[0].key[0]).toBe(
+		expect(response.body.errors[0].key).toBe(
 			"password"
 		);
 	});
@@ -55,7 +55,7 @@ describe("POST /api/user - User Creation Endpoint", () => {
 		};
 
 		const response = await request(app)
-			.post("/api/user")
+			.post("/user")
 			.set("x-api-key", environment.apiKey) // Adiciona a chave de API para passar pelo middleware
 			.send(userData);
 
@@ -81,11 +81,11 @@ describe("POST /api/user - User Creation Endpoint", () => {
 
 		// 2. Tentar criar o mesmo usuário novamente pela API
 		const response = await request(app)
-			.post("/api/user")
+			.post("/user")
 			.set("x-api-key", environment.apiKey) // Adiciona a chave de API para passar pelo middleware
 			.send(existingUser);
 
-		expect(response.status).toBe(200);
+		expect(response.status).toBe(400);
 		expect(response.body.errors).toBeDefined();
 		expect(response.body.errors[0].message).toBe(
 			"Já existe um usuário com esse email"
@@ -103,7 +103,7 @@ describe("POST /api/user - User Creation Endpoint", () => {
 		};
 
 		const response = await request(app)
-			.post("/api/user")
+			.post("/user")
 			.set("x-api-key", environment.apiKey) // Adiciona a chave de API para passar pelo middleware
 			.send(newUser);
 
